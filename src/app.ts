@@ -1,4 +1,4 @@
-import express,{Express} from 'express'
+import express,{Express,Request,Response} from 'express'
 export {cargarRutas} from './routers/index'
 import dotenv  from "dotenv"
 import { cargarRutas } from './routers/index';
@@ -16,6 +16,9 @@ app.use(cookieParser());
 app.use(cors());
 
 cargarRutas(app);
+app.get('/', (req:Request, res:Response) => {
+    res.status(200).send('oks');
+});
 
 app.listen(port , () => {
     console.log(`Servidor corriendo el port ${port}`);
