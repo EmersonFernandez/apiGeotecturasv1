@@ -55,16 +55,18 @@ function uploadImage(req, res) {
             return res.status(400).send('No se ha subido ningún archivo.');
         }
         const { originalname, mimetype, size, buffer } = req.file;
+        const { titulo } = req.body;
+        console.log(titulo);
         const sqlQuerySeq = `select COALESCE(max(ncodigo) , 0) + 1 seq from "archivos".tgeo_imagenes_publicas`;
         const sqlQuery = `
-    INSERT INTO archivos.tgeo_imagenes_publicas (ncodigo,vnombre_archivo, vtipo_mime, ntamano_bytes, bytdatos)
-    VALUES($1, $2, $3, $4, $5) RETURNING vnombre_archivo as nombre
+    INSERT INTO archivos.tgeo_imagenes_publicas (ncodigo,vnombre_archivo, vtipo_mime, ntamano_bytes, bytdatos, vtitulo)
+    VALUES($1, $2, $3, $4, $5, $6) RETURNING vnombre_archivo as nombre
     `;
         try {
             const pool = yield (0, db_1.getPool)();
             const resultsSeq = yield pool.query(sqlQuerySeq);
             const seq = resultsSeq.rows[0].seq;
-            const results = yield pool.query(sqlQuery, [seq, originalname, mimetype, size, buffer]);
+            const results = yield pool.query(sqlQuery, [seq, originalname, mimetype, size, buffer, titulo]);
             res.status(201).send(`Imagen subida con ID: ${results.rows[0].nombre}`);
         }
         catch (err) {
