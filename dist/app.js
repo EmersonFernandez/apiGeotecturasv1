@@ -20,6 +20,9 @@ app.use(express_1.default.urlencoded({ extended: false }));
 app.use((0, cookie_parser_1.default)());
 app.use((0, cors_1.default)());
 (0, index_2.cargarRutas)(app);
+app.get('/', (req, res) => {
+    res.status(200).send('oks');
+});
 app.listen(port, () => {
     console.log(`Servidor corriendo el port ${port}`);
 });
