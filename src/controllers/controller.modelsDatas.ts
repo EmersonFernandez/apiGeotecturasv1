@@ -37,7 +37,7 @@ export async function getDataModels(req: Request, res: Response) {
             res.status(401).json({ message: 'no hay dato para este modelos' });
             return;
         }
-        
+
 
         // armado del query para extraer la informacion de los modelos 
         const sqlQuery = `SELECT * FROM \"${schema}\".${nombre}`;
@@ -56,3 +56,4 @@ export async function getDataModels(req: Request, res: Response) {
         });
     }
 }
+
