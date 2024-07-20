@@ -12,7 +12,7 @@ declare global {
 // Crear un token JWT
 const word: string = 'clave';
 export const generateToken = (usuario: any) => {
-    const token = jwt.sign(usuario, word, { expiresIn: '1h' });
+    const token = jwt.sign(usuario,  process.env.SECRETWORD || '', { expiresIn: '1h' });
     return token;
 }
 

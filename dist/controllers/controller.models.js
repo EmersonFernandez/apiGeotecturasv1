@@ -9,17 +9,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.modelsArquitectonico = exports.uploadModels = void 0;
+exports.modelsUrbanistico = exports.modelsPredial = exports.modelsNormativo = exports.modelsInmobiliario = exports.modelsCatastral = exports.modelsArquitectonico = exports.uploadModels = void 0;
 const db_1 = require("../db");
+// variables
 let sqlQuery;
+// nombre del schema donde esta almacenadas la tablas
 const schema = process.env.DB_SCHEMA_MODELOS;
 // para manejar los nombres de las tablas ha utilizar
 const NAMES_TABLES = {
     modelos: 'tgeo_modelos',
     elementos: 'tgeo_modelos_elementos',
-    data: 'tgeo_modelos_datas',
+    usuarioModelosElementos: 'tgeo_usuario_elemento_modelo',
 };
-// Cargar elementos de los modelos
+// carga de los modelos a la base de dato
 function uploadModels(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const file = req.file;
@@ -57,27 +59,33 @@ function uploadModels(req, res) {
     });
 }
 exports.uploadModels = uploadModels;
-// Reusable function to retrieve and send a file
+// reusable function to retrieve and send a file
 const modelsGenerateElements = (req, res, params) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        // validamos el la respuesta del token
+        if (!req.user) {
+            res.status(401).json({ message: 'no hay token' });
+        }
         const pool = yield (0, db_1.getPool)();
         const sqlQuery = `
-            SELECT * FROM ${schema}.${NAMES_TABLES.elementos} WHERE nmodelo = $1 and ncodigo = $2
+            SELECT * FROM ${schema}.${NAMES_TABLES.elementos} , ${schema}.${NAMES_TABLES.usuarioModelosElementos}
+            WHERE ${schema}.${NAMES_TABLES.elementos}.ncodigo = ${schema}.${NAMES_TABLES.usuarioModelosElementos}.nelemento_modelo
+            AND nmodelo = $1 AND ${schema}.${NAMES_TABLES.elementos}.ncodigo = $2 AND nusuario = $3 AND ngrupo = $4
         `;
-        // Busca el modelo 3D en la base de datos por su ncodigo
-        const result = yield pool.query(sqlQuery, [params, req.params.id]);
+        // Buscar el modelo 3D en la base de datos por su ncodigo
+        const result = yield pool.query(sqlQuery, [params, req.params.id, req.user.id, req.params.idgrupo]);
         if (result.rows.length === 0) {
-            return res.status(404).json({ error: 'File not found' });
+            return res.status(404).json({ error: 'Archivo no encontrado o el usuario no tiene acceso' });
         }
         const file = result.rows[0];
         const buffer = file.bytdato;
-        // Configura las cabeceras de respuesta
+        // configurar las cabeceras de respuesta
         res.set({
-            'Content-Disposition': `inline; filename="${file.vnombre_archivo}"`, // Establece el nombre de archivo para la descarga
-            'Content-Type': 'model/vnd.autodesk.fbx', // Establece el tipo MIME para archivos FBX
-            'Content-Length': buffer.length // Establece la longitud del contenido en bytes
+            'Content-Disposition': `inline; filename="${file.vnombre_archivo}"`, // establece el nombre de archivo para la descarga
+            'Content-Type': 'model/vnd.autodesk.fbx', // establece el tipo MIME para archivos FBX
+            'Content-Length': buffer.length //establece la longitud del contenido en bytes
         });
-        // Envía el archivo como respuesta
+        // envía el archivo como respuesta
         res.send(buffer);
     }
     catch (error) {
@@ -85,10 +93,45 @@ const modelsGenerateElements = (req, res, params) => __awaiter(void 0, void 0, v
         res.status(500).json({ error: 'Error en la base de dato', details: error });
     }
 });
-// Mostrar los elementos del modelo Arquitectonico 
+// mostrar los elementos del modelos arquitectonico 
 function modelsArquitectonico(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         yield modelsGenerateElements(req, res, 1);
     });
 }
 exports.modelsArquitectonico = modelsArquitectonico;
+// mostrar los elmentos de los modelos catastral
+function modelsCatastral(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield modelsGenerateElements(req, res, 2);
+    });
+}
+exports.modelsCatastral = modelsCatastral;
+// mostrar los elementos del modelos inmobiliario 
+function modelsInmobiliario(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield modelsGenerateElements(req, res, 3);
+    });
+}
+exports.modelsInmobiliario = modelsInmobiliario;
+// mostrar los elementos de los modelos normativo
+function modelsNormativo(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield modelsGenerateElements(req, res, 4);
+    });
+}
+exports.modelsNormativo = modelsNormativo;
+// mostrar los elementos de los modelos predial
+function modelsPredial(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield modelsGenerateElements(req, res, 5);
+    });
+}
+exports.modelsPredial = modelsPredial;
+// mostrar los elementos de los modelos urbanisitico
+function modelsUrbanistico(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield modelsGenerateElements(req, res, 6);
+    });
+}
+exports.modelsUrbanistico = modelsUrbanistico;

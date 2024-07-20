@@ -13,7 +13,7 @@ router.get('/', (req, res) => {
     if (!token) {
         return res.status(401).json({ valid: false, message: 'No token provided' });
     }
-    jsonwebtoken_1.default.verify(token, word, (err, decoded) => {
+    jsonwebtoken_1.default.verify(token, process.env.SECRETWORD || '', (err, decoded) => {
         if (err) {
             return res.status(401).json({ valid: false, message: 'Invalid token' });
         }

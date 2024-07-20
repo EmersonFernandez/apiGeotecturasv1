@@ -27,7 +27,6 @@ export async function login(req: Request, res: Response) {
 
         if (!username || !password) {
             return res.status(400).json({
-                error: true,
                 message: "Todos los campos son obligatorios"
             });
         }
@@ -50,7 +49,6 @@ export async function login(req: Request, res: Response) {
             res.cookie('token', token, { maxAge: 900000, httpOnly: true }); // Set cookie named 'token'
 
             return res.status(200).json({
-                error: false,
                 message: "Credenciales Correctas",
                 token
             });
@@ -59,14 +57,12 @@ export async function login(req: Request, res: Response) {
         } else {
             // Respuesta genérica para no dar pistas sobre si el usuario o la contraseña son incorrectos
             return res.status(401).json({
-                error: true,
                 message: "Usuario o contraseña incorrecta"
             });
         }
     } catch (error) {
         console.log('Error en la base de datos', error);
         return res.status(500).json({
-            error: true,
             message: "Error interno del servidor"
         });
     }

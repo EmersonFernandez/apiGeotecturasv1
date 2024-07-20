@@ -11,7 +11,7 @@ router.get('/', (req:Request, res:Response) => {
         return res.status(401).json({ valid: false, message: 'No token provided' });
     }
 
-    jwt.verify(token, word, (err, decoded) => {
+    jwt.verify(token, process.env.SECRETWORD || '' , (err, decoded) => {
         if (err) {
             return res.status(401).json({ valid: false, message: 'Invalid token' });
         }

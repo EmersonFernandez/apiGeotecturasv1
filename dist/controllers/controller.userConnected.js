@@ -34,7 +34,6 @@ function getUserConnected(req, res) {
             const pool = yield (0, db_1.getPool)();
             const results = yield pool.query(sqlQuery, [idUser]);
             res.status(200).json({
-                error: false,
                 message: 'OK',
                 results: results.rows
             });
@@ -42,7 +41,6 @@ function getUserConnected(req, res) {
         catch (error) {
             console.log('Error en la base de datos', error);
             return res.status(500).json({
-                error: true,
                 message: "Error interno del servidor"
             });
         }

@@ -8,7 +8,7 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 // Crear un token JWT
 const word = 'clave';
 const generateToken = (usuario) => {
-    const token = jsonwebtoken_1.default.sign(usuario, word, { expiresIn: '1h' });
+    const token = jsonwebtoken_1.default.sign(usuario, process.env.SECRETWORD || '', { expiresIn: '1h' });
     return token;
 };
 exports.generateToken = generateToken;

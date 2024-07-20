@@ -28,7 +28,6 @@ export async function getUserConnected(req: Request, res: Response) {
         const results = await pool.query(sqlQuery, [idUser]);
 
         res.status(200).json({
-            error: false,
             message: 'OK',
             results: results.rows
         })
@@ -36,7 +35,6 @@ export async function getUserConnected(req: Request, res: Response) {
     } catch (error) {
         console.log('Error en la base de datos', error);
         return res.status(500).json({
-            error: true,
             message: "Error interno del servidor"
         });
     }

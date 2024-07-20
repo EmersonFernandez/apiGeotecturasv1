@@ -2,16 +2,20 @@ import { Request, Response } from 'express'
 import { Pool, QueryResultRow } from 'pg';
 import { getPool } from '../db'
 
+// variables
 let sqlQuery: string;
+
+// nombre del schema donde esta almacenadas la tablas
 const schema = process.env.DB_SCHEMA_MODELOS;
+
 // para manejar los nombres de las tablas ha utilizar
 const NAMES_TABLES: Record<string, string> = {
     modelos: 'tgeo_modelos',
     elementos: 'tgeo_modelos_elementos',
-    data: 'tgeo_modelos_datas',
+    usuarioModelosElementos: 'tgeo_usuario_elemento_modelo',
 };
 
-// Cargar elementos de los modelos
+// carga de los modelos a la base de dato
 export async function uploadModels(req: Request, res: Response) {
     const file = req.file;
     if (!file) {
@@ -51,33 +55,39 @@ export async function uploadModels(req: Request, res: Response) {
     }
 }
 
-// Reusable function to retrieve and send a file
+// reusable function to retrieve and send a file
 const modelsGenerateElements = async (req:any, res:any, params:number) => {
     try {
-        const pool = await getPool();
 
+        // validamos el la respuesta del token
+        if(!req.user){
+            res.status(401).json({message:'no hay token'})
+        }
+
+        const pool = await getPool();
         const sqlQuery = `
-            SELECT * FROM ${schema}.${NAMES_TABLES.elementos} WHERE nmodelo = $1 and ncodigo = $2
+            SELECT * FROM ${schema}.${NAMES_TABLES.elementos} , ${schema}.${NAMES_TABLES.usuarioModelosElementos}
+            WHERE ${schema}.${NAMES_TABLES.elementos}.ncodigo = ${schema}.${NAMES_TABLES.usuarioModelosElementos}.nelemento_modelo
+            AND nmodelo = $1 AND ${schema}.${NAMES_TABLES.elementos}.ncodigo = $2 AND nusuario = $3 AND ngrupo = $4
         `;
 
-        // Busca el modelo 3D en la base de datos por su ncodigo
-        const result = await pool.query(sqlQuery, [params, req.params.id]);
-
+        // Buscar el modelo 3D en la base de datos por su ncodigo
+        const result = await pool.query(sqlQuery, [params, req.params.id, req.user.id, req.params.idgrupo]);
         if (result.rows.length === 0) {
-            return res.status(404).json({ error: 'File not found' });
+            return res.status(404).json({ error: 'Archivo no encontrado o el usuario no tiene acceso' });
         }
 
         const file = result.rows[0];
         const buffer = file.bytdato;
 
-        // Configura las cabeceras de respuesta
+        // configurar las cabeceras de respuesta
         res.set({
-            'Content-Disposition': `inline; filename="${file.vnombre_archivo}"`, // Establece el nombre de archivo para la descarga
-            'Content-Type': 'model/vnd.autodesk.fbx', // Establece el tipo MIME para archivos FBX
-            'Content-Length': buffer.length // Establece la longitud del contenido en bytes
+            'Content-Disposition': `inline; filename="${file.vnombre_archivo}"`, // establece el nombre de archivo para la descarga
+            'Content-Type': 'model/vnd.autodesk.fbx', // establece el tipo MIME para archivos FBX
+            'Content-Length': buffer.length //establece la longitud del contenido en bytes
         });
 
-        // Envía el archivo como respuesta
+        // envía el archivo como respuesta
         res.send(buffer);
     } catch (error) {
         console.error('Error al recuperar y enviar el archivo FBX:', error);
@@ -86,7 +96,32 @@ const modelsGenerateElements = async (req:any, res:any, params:number) => {
 };
 
 
-// Mostrar los elementos del modelo Arquitectonico 
+// mostrar los elementos del modelos arquitectonico 
 export async function modelsArquitectonico(req: Request, res: Response) {
     await modelsGenerateElements(req,res,1);
+}
+
+// mostrar los elmentos de los modelos catastral
+export async function modelsCatastral(req: Request, res: Response) {
+    await modelsGenerateElements(req,res,2);
+}
+
+// mostrar los elementos del modelos inmobiliario 
+export async function modelsInmobiliario(req:Request, res: Response) {
+    await modelsGenerateElements(req,res,3);
+}
+
+// mostrar los elementos de los modelos normativo
+export async function modelsNormativo(req: Request, res: Response) {
+    await modelsGenerateElements(req,res,4);
+}
+
+// mostrar los elementos de los modelos predial
+export async function modelsPredial(req: Request, res: Response) {
+    await modelsGenerateElements(req,res,5);
+}
+
+// mostrar los elementos de los modelos urbanisitico
+export async function modelsUrbanistico(req: Request, res: Response) {
+    await modelsGenerateElements(req,res,6);
 }

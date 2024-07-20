@@ -19,7 +19,6 @@ export async function getUsers(req:Request,res:Response) {
         const results:QueryResultRow = await pool.query(sqlQuery);
 
         res.status(201).json({
-            status:201,
             ok:'Ok',
             results:results.rows
         });

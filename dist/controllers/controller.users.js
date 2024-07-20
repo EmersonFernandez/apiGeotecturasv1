@@ -27,7 +27,6 @@ function getUsers(req, res) {
         `;
             const results = yield pool.query(sqlQuery);
             res.status(201).json({
-                status: 201,
                 ok: 'Ok',
                 results: results.rows
             });
