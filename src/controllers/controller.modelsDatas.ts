@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import { Pool, QueryResultRow } from 'pg';
 import { getPool } from '../db'
 
-// variables
+// variables ->
 let sqlQuery: string;
 
 // nombre del schema donde esta almacenadas la tablas

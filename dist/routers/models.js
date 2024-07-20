@@ -18,5 +18,5 @@ router.get('/normativo/:id/grupo/:idgrupo', middleware_1.middlewareVerifyToken, 
 router.get('/predial/:id/grupo/:idgrupo', middleware_1.middlewareVerifyToken, controller_models_1.modelsPredial);
 router.get('/urbanistico/:id/grupo/:idgrupo', middleware_1.middlewareVerifyToken, controller_models_1.modelsUrbanistico);
 // ruta para obtner la informacion de los modelos correspondientes
-router.get('/datamodels/:id', middleware_1.middlewareVerifyToken, controller_modelsDatas_1.getDataModels);
+router.get('/datamodels/:id', controller_modelsDatas_1.getDataModels);
 exports.default = router;

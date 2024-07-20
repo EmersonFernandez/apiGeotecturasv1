@@ -27,3 +27,5 @@ router.get('/urbanistico/:id/grupo/:idgrupo', middlewareVerifyToken, modelsUrban
 router.get('/datamodels/:id',getDataModels)
 
 export default router;
+
+

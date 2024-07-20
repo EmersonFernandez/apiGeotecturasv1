@@ -25,13 +25,13 @@ function getDataModels(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             // validamos el la respuesta del token
-            if (!req.user) {
-                res.status(401).json({ message: 'no hay token' });
-            }
+            // if (!req.user) {
+            //     res.status(401).json({ message: 'no hay token' })
+            // }
             const pool = yield (0, db_1.getPool)();
             // fucion almacenada para obtener el nombre de la tabla de la informacion del modelo
             const sqlTable = `SELECT * FROM ${schemaModels}.obtener_tabla_informacion_modelo($1,$2)`;
-            const resultTable = yield pool.query(sqlTable, [req.params.id, req.user.id]);
+            const resultTable = yield pool.query(sqlTable, [req.params.id, 1]);
             // obtenmos el schema y el nombre de la tabla
             const { schema, nombre } = resultTable.rows[0];
             if (!schema || !nombre) {
