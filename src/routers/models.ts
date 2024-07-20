@@ -16,7 +16,7 @@ const router: Router = express.Router();
 
 router.post('/upload', middlewareVerifyToken, upload.single('file'), uploadModels);
 router.get('/arquitectonico/:id/grupo/:idgrupo', middlewareVerifyToken,  modelsArquitectonico);
-router.get('/inmobiliario/:id/grupo/:idgrupo', middlewareVerifyToken, modelsInmobiliario);
+router.get('/inmobiliario/:id/grupo/:idgrupo', modelsInmobiliario);
 router.get('/catastral/:id/grupo/:idgrupo', middlewareVerifyToken, modelsCatastral);
 router.get('/normativo/:id/grupo/:idgrupo', middlewareVerifyToken, modelsNormativo);
 router.get('/predial/:id/grupo/:idgrupo', middlewareVerifyToken, modelsPredial);

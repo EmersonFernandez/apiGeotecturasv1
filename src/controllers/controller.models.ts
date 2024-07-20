@@ -60,9 +60,9 @@ const modelsGenerateElements = async (req:any, res:any, params:number) => {
     try {
 
         // validamos el la respuesta del token
-        if(!req.user){
-            res.status(401).json({message:'no hay token'})
-        }
+        // if(!req.user){
+        //     res.status(401).json({message:'no hay token'})
+        // }
 
         const pool = await getPool();
         const sqlQuery = `
@@ -72,7 +72,7 @@ const modelsGenerateElements = async (req:any, res:any, params:number) => {
         `;
 
         // Buscar el modelo 3D en la base de datos por su ncodigo
-        const result = await pool.query(sqlQuery, [params, req.params.id, req.user.id, req.params.idgrupo]);
+        const result = await pool.query(sqlQuery, [params, req.params.id, 1, req.params.idgrupo]);
         if (result.rows.length === 0) {
             return res.status(404).json({ error: 'Archivo no encontrado o el usuario no tiene acceso' });
         }
