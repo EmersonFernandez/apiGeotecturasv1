@@ -2,12 +2,11 @@ import { Request, Response } from 'express'
 import { Pool, QueryResultRow } from 'pg';
 import { getPool } from '../db'
 
-// variables ->
+// variables ->>>
 let sqlQuery: string;
 
 // nombre del schema donde esta almacenadas la tablas
 const schemaModels = process.env.DB_SCHEMA_MODELOS;
-
 
 // para manejar los nombres de las tablas ha utilizar
 const NAMES_TABLES: Record<string, string> = {
@@ -15,9 +14,6 @@ const NAMES_TABLES: Record<string, string> = {
     dataTabla: 'tgeo_tablas_datos',
     usuarioModelosElementos: 'tgeo_usuario_elemento_modelo',
 };
-
-
-
 
 
 export async function getDataModels(req: Request, res: Response) {
