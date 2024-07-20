@@ -63,6 +63,7 @@ const modelsGenerateElements = async (req:any, res:any, params:number) => {
         // if(!req.user){
         //     res.status(401).json({message:'no hay token'})
         // }
+        
 
         const pool = await getPool();
         const sqlQuery = `

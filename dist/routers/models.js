@@ -12,7 +12,7 @@ const upload = (0, multer_1.default)();
 const router = express_1.default.Router();
 router.post('/upload', middleware_1.middlewareVerifyToken, upload.single('file'), controller_models_1.uploadModels);
 router.get('/arquitectonico/:id/grupo/:idgrupo', middleware_1.middlewareVerifyToken, controller_models_1.modelsArquitectonico);
-router.get('/inmobiliario/:id/grupo/:idgrupo', middleware_1.middlewareVerifyToken, controller_models_1.modelsInmobiliario);
+router.get('/inmobiliario/:id/grupo/:idgrupo', controller_models_1.modelsInmobiliario);
 router.get('/catastral/:id/grupo/:idgrupo', middleware_1.middlewareVerifyToken, controller_models_1.modelsCatastral);
 router.get('/normativo/:id/grupo/:idgrupo', middleware_1.middlewareVerifyToken, controller_models_1.modelsNormativo);
 router.get('/predial/:id/grupo/:idgrupo', middleware_1.middlewareVerifyToken, controller_models_1.modelsPredial);

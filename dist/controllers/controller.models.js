@@ -63,9 +63,9 @@ exports.uploadModels = uploadModels;
 const modelsGenerateElements = (req, res, params) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // validamos el la respuesta del token
-        if (!req.user) {
-            res.status(401).json({ message: 'no hay token' });
-        }
+        // if(!req.user){
+        //     res.status(401).json({message:'no hay token'})
+        // }
         const pool = yield (0, db_1.getPool)();
         const sqlQuery = `
             SELECT * FROM ${schema}.${NAMES_TABLES.elementos} , ${schema}.${NAMES_TABLES.usuarioModelosElementos}
@@ -73,7 +73,7 @@ const modelsGenerateElements = (req, res, params) => __awaiter(void 0, void 0, v
             AND nmodelo = $1 AND ${schema}.${NAMES_TABLES.elementos}.ncodigo = $2 AND nusuario = $3 AND ngrupo = $4
         `;
         // Buscar el modelo 3D en la base de datos por su ncodigo
-        const result = yield pool.query(sqlQuery, [params, req.params.id, req.user.id, req.params.idgrupo]);
+        const result = yield pool.query(sqlQuery, [params, req.params.id, 1, req.params.idgrupo]);
         if (result.rows.length === 0) {
             return res.status(404).json({ error: 'Archivo no encontrado o el usuario no tiene acceso' });
         }
