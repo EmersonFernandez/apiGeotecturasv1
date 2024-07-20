@@ -24,6 +24,6 @@ router.get('/urbanistico/:id/grupo/:idgrupo', middlewareVerifyToken, modelsUrban
 
 
 // ruta para obtner la informacion de los modelos correspondientes
-router.get('/datamodels/:id', middlewareVerifyToken ,getDataModels)
+router.get('/datamodels/:id',getDataModels)
 
 export default router;

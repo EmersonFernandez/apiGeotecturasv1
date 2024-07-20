@@ -21,14 +21,14 @@ export async function getDataModels(req: Request, res: Response) {
     try {
 
         // validamos el la respuesta del token
-        if (!req.user) {
-            res.status(401).json({ message: 'no hay token' })
-        }
+        // if (!req.user) {
+        //     res.status(401).json({ message: 'no hay token' })
+        // }
 
         const pool: Pool = await getPool();
         // fucion almacenada para obtener el nombre de la tabla de la informacion del modelo
         const sqlTable = `SELECT * FROM ${schemaModels}.obtener_tabla_informacion_modelo($1,$2)`;
-        const resultTable: QueryResultRow = await pool.query(sqlTable, [req.params.id, req.user.id]);
+        const resultTable: QueryResultRow = await pool.query(sqlTable, [req.params.id, 1]);
 
         // obtenmos el schema y el nombre de la tabla
         const { schema, nombre } = resultTable.rows[0];
